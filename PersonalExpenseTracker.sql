@@ -55,6 +55,20 @@ INSERT INTO `expenses` (`expense_id`, `user_id`, `expense`, `expensedate`, `expe
 (121, '9', 500, '2023-10-19', 'Clothings'),
 (122, '9', 426, '2023-10-16', 'Household Items');
 
+
+INSERT INTO `expenses` (`user_id`, `expense`, `expensedate`, `expensecategory`) VALUES
+('9', 789, CURRENT_DATE, 'Medicine'),              -- Record for today
+('9', 3, CURRENT_DATE, 'Entertainment'),           -- Record for today
+('9', 469, CURRENT_DATE - INTERVAL 1 DAY, 'Clothings'),  -- Record for yesterday
+('9', 985, CURRENT_DATE - INTERVAL 1 DAY, 'Entertainment'), -- Record for yesterday
+('12', 3, CURRENT_DATE, 'Clothings'),              -- Record for today
+('12', 89, CURRENT_DATE - INTERVAL 1 DAY, 'Bills & Recharges'), -- Record for yesterday
+('9', 300, CURRENT_DATE, 'Food'),                  -- Record for today
+('9', 456, CURRENT_DATE - INTERVAL 1 DAY, 'Clothings'), -- Record for yesterday
+('9', 1000, CURRENT_DATE, 'Entertainment'),        -- Record for today
+('9', 500, CURRENT_DATE - INTERVAL 1 DAY, 'Clothings'); -- Record for yesterday
+
+
 -- --------------------------------------------------------
 
 --
