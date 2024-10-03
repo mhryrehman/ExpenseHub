@@ -35,6 +35,9 @@ while ($row = mysqli_fetch_assoc($monthly_expenses_result)) {
     $monthly_expense_data[] = $row['total_expense'];
 }
 
+$profile_img_query = mysqli_query($con, "SELECT img FROM users WHERE user_id = '$userid'");
+$profile_img = mysqli_fetch_assoc($profile_img_query)['img'];
+
 $today_expense = mysqli_query($con, "SELECT SUM(expense) FROM expenses WHERE user_id = '$userid' AND expensedate = CURDATE()");
 $yesterday_expense = mysqli_query($con, "SELECT SUM(expense) FROM expenses WHERE user_id = '$userid' AND expensedate = DATE_SUB(CURDATE(), INTERVAL 1 DAY)");
 $this_week_expense = mysqli_query($con, "SELECT SUM(expense) FROM expenses WHERE user_id = '$userid' AND expensedate >= DATE_SUB(CURDATE(), INTERVAL 1 WEEK)");
@@ -119,7 +122,9 @@ $total_expense_amount = '0' + mysqli_fetch_assoc($total_expense)['SUM(expense)']
     <!-- Sidebar -->
     <div class="border-right" id="sidebar-wrapper">
       <div class="user">
-        <img class="img img-fluid rounded-circle" src="uploads\default_profile.png" width="120">
+	  <a href="index.php">
+        <img class="img img-fluid rounded-circle" src="uploads/<?php echo $profile_img; ?>" width="120">
+    </a>
         <h5><?php echo $username ?></h5>
         <p><?php echo $useremail ?></p>
       </div>

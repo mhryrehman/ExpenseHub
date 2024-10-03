@@ -5,6 +5,10 @@ $del = false;
 $expenseamount = "";
 $expensedate = date("Y-m-d");
 $expensecategory = "";
+
+$profile_img_query = mysqli_query($con, "SELECT img FROM users WHERE user_id = '$userid'");
+$profile_img = mysqli_fetch_assoc($profile_img_query)['img'];
+
 if (isset($_POST['add'])) {
     $expenseamount = $_POST['expenseamount'];
     $expensedate = $_POST['expensedate'];
@@ -111,8 +115,9 @@ if (isset($_GET['delete'])) {
         <!-- Sidebar -->
     <div class="border-right" id="sidebar-wrapper">
       <div class="user">
-        <img class="img img-fluid rounded-circle" src="uploads\default_profile.png" width="120">
-        <h5><?php echo $username ?></h5>
+  <a href="index.php">
+        <img class="img img-fluid rounded-circle" src="uploads/<?php echo $profile_img; ?>" width="120">
+    </a>        <h5><?php echo $username ?></h5>
         <p><?php echo $useremail ?></p>
       </div>
       <div class="sidebar-heading">Management</div>
