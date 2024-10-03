@@ -3,7 +3,7 @@ require('config.php');
 session_start();
 $errormsg = "";
 if (isset($_POST['email'])) {
-
+  $error_message = ""; // To store error messages
   $email = stripslashes($_REQUEST['email']);
   $email = mysqli_real_escape_string($con, $email);
   $password = stripslashes($_REQUEST['password']);
@@ -15,7 +15,7 @@ if (isset($_POST['email'])) {
     $_SESSION['email'] = $email;
     header("Location: index.php");
   } else {
-    $errormsg  = "Wrong";
+    $error_message  = "invalid Credentials";
   }
 } else {
 }
@@ -29,7 +29,7 @@ if (isset($_POST['email'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <title>Login</title>
 
   <!-- Bootstrap core CSS -->
@@ -90,6 +90,12 @@ if (isset($_POST['email'])) {
 <body>
   <div class="login-form">
     <form action="" method="POST" autocomplete="off">
+	<?php if (!empty($error_message)): ?>
+       <div id="error-alert" class="alert alert-danger w-100">
+       <?php echo $error_message; ?>
+       </div>
+    <?php endif; ?>
+	
       <h2 class="text-center">Personal Expense Tracker</h2>
       <p class="hint-text">Login Panel</p>
       <div class="form-group">
@@ -109,6 +115,13 @@ if (isset($_POST['email'])) {
 
 <script src="js/bootstrap.min.js"></script>
 <script src="js/feather.min.js"></script>
+   <script type="text/javascript">
+        $(document).ready(function() {
+			setTimeout(function() {
+            document.querySelector('#error-alert').remove();
+            }, 5000);
+        });
+    </script>
 <!-- Menu Toggle Script -->
 <script>
   $("#menu-toggle").click(function(e) {
@@ -119,5 +132,5 @@ if (isset($_POST['email'])) {
 <script>
   feather.replace()
 </script>
-
+ 
 </html>

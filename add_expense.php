@@ -5,18 +5,25 @@ $del = false;
 $expenseamount = "";
 $expensedate = date("Y-m-d");
 $expensecategory = "";
-
 $profile_img_query = mysqli_query($con, "SELECT img FROM users WHERE user_id = '$userid'");
 $profile_img = mysqli_fetch_assoc($profile_img_query)['img'];
 
 if (isset($_POST['add'])) {
+	$error_message = ""; // To store error messages
+    $success_message = ""; // To store success messages
     $expenseamount = $_POST['expenseamount'];
     $expensedate = $_POST['expensedate'];
     $expensecategory = $_POST['expensecategory'];
 
     $expenses = "INSERT INTO expenses (user_id, expense,expensedate,expensecategory) VALUES ('$userid', '$expenseamount','$expensedate','$expensecategory')";
     $result = mysqli_query($con, $expenses) or die("Something Went Wrong!");
-    header('location: add_expense.php');
+	 if (mysqli_query($con, $sql)) {
+          $success_message = "Expense Added successfully.";
+		 $expenseamount = "";
+        $expensedate = date("Y-m-d"); 
+        } else {
+           $error_message = "ERROR: Could not Add Expense. " . mysqli_error($con);
+          }
 }
 
 if (isset($_POST['update'])) {
@@ -110,54 +117,64 @@ if (isset($_GET['delete'])) {
 
 <body>
 
+    
     <div class="d-flex" id="wrapper">
 
         <!-- Sidebar -->
-    <div class="border-right" id="sidebar-wrapper">
-      <div class="user">
-  <a href="index.php">
-        <img class="img img-fluid rounded-circle" src="uploads/<?php echo $profile_img; ?>" width="120">
-    </a>        <h5><?php echo $username ?></h5>
-        <p><?php echo $useremail ?></p>
-      </div>
-      <div class="sidebar-heading">Management</div>
-      <div class="list-group list-group-flush">
-        <a href="index.php" class="list-group-item list-group-item-action"><span data-feather="home"></span> Dashboard</a>
-        <a href="add_expense.php" class="list-group-item list-group-item-action sidebar-active"><span data-feather="plus-square"></span> Add Expenses</a>
-        <a href="manage_expense.php" class="list-group-item list-group-item-action "><span data-feather="dollar-sign"></span> Manage Expenses</a>
-        <a href="expensereport.php" class="list-group-item list-group-item-action"><span data-feather="file-text"></span> Expense Report</a>
-      </div>
-      <div class="sidebar-heading">Settings </div>
-      <div class="list-group list-group-flush">
-        <a href="profile.php" class="list-group-item list-group-item-action "><span data-feather="user"></span> Profile</a>
-        <a href="logout.php" class="list-group-item list-group-item-action "><span data-feather="power"></span> Logout</a>
-      </div>
-    </div>
-    <!-- /#sidebar-wrapper -->
+        <div class="border-right" id="sidebar-wrapper">
+            <div class="user">
+                <a href="index.php">
+                    <img class="img img-fluid rounded-circle" src="uploads/<?php echo $profile_img; ?>" width="120">
+                </a>
+                <h5><?php echo $username ?></h5>
+                <p><?php echo $useremail ?></p>
+            </div>
+            <div class="sidebar-heading">Management</div>
+            <div class="list-group list-group-flush">
+                <a href="index.php" class="list-group-item list-group-item-action"><span data-feather="home"></span> Dashboard</a>
+                <a href="add_expense.php" class="list-group-item list-group-item-action sidebar-active"><span data-feather="plus-square"></span> Add Expenses</a>
+                <a href="manage_expense.php" class="list-group-item list-group-item-action "><span data-feather="dollar-sign"></span> Manage Expenses</a>
+                <a href="expensereport.php" class="list-group-item list-group-item-action"><span data-feather="file-text"></span> Expense Report</a>
+            </div>
+            <div class="sidebar-heading">Settings </div>
+            <div class="list-group list-group-flush">
+                <a href="profile.php" class="list-group-item list-group-item-action "><span data-feather="user"></span> Profile</a>
+                <a href="logout.php" class="list-group-item list-group-item-action "><span data-feather="power"></span> Logout</a>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
 
         <!-- Page Content -->
         <div id="page-content-wrapper">
 
             <nav class="navbar navbar-expand-lg navbar-light  border-bottom">
-
-
                 <button class="toggler" type="button" id="menu-toggle" aria-expanded="false">
                     <span data-feather="menu"></span>
                 </button>
                 <div class="col-md-12 text-center">
-    <h3 class="try">Add Your Daily Expenses</h3>
-</div>
-
-                <hr>                        
+                    <h3 class="try">Add Your Daily Expenses</h3>
+                </div>
+                <hr>
             </nav>
 
             <div class="container">
-               
-                <div class="row ">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <!-- Display Error Message -->
+                        <?php if (!empty($error_message)): ?>
+                            <div id="error-alert" class="alert alert-danger w-100">
+                                <?php echo $error_message; ?>
+                            </div>
+                        <?php endif; ?>
 
-                    <div class="col-md-3"></div>
+                        <!-- Display Success Message if no errors -->
+                        <?php if (empty($error_message) && !empty($success_message)): ?>
+                            <div id="success-alert" class="alert alert-success w-100">
+                                <?php echo $success_message; ?>
+                            </div>
+                        <?php endif; ?>
 
-                    <div class="col-md" style="margin:0 auto;">
+                        <!-- Form for adding or updating expenses -->
                         <form action="" method="POST">
                             <div class="form-group row" style="margin-top: 20px;">
                                 <label for="expenseamount" class="col-sm-6 col-form-label"><b>Enter Amount</b></label>
@@ -165,31 +182,33 @@ if (isset($_GET['delete'])) {
                                     <input type="number" class="form-control col-sm-12" value="<?php echo $expenseamount; ?>" id="expenseamount" name="expenseamount" required>
                                 </div>
                             </div>
+
                             <div class="form-group row">
                                 <label for="expensedate" class="col-sm-6 col-form-label"><b>Date</b></label>
                                 <div class="col-md-6">
                                     <input type="date" class="form-control col-sm-12" value="<?php echo $expensedate; ?>" name="expensedate" id="expensedate" required>
                                 </div>
                             </div>
-<fieldset class="form-group">
-    <div class="row">
-        <label class="col-form-label col-sm-6 pt-0"><b>Category</b></label>
-        <div class="col-md">
-            <select class="form-control" id="expensecategory" name="expensecategory" required>
-                <?php
-                $categories_query = "SELECT * FROM expense_categories";
-                $categories_result = mysqli_query($con, $categories_query);
 
-                while ($row = mysqli_fetch_assoc($categories_result)) {
-                    $category_name = $row['category_name'];
-                    $selected = ($category_name === $expensecategory) ? 'selected' : '';
-                    echo "<option value=\"$category_name\" $selected>$category_name</option>";
-                }
-                ?>
-            </select>
-        </div>
-    </div>
-</fieldset>
+                            <fieldset class="form-group">
+                                <div class="row">
+                                    <label class="col-form-label col-sm-6 pt-0"><b>Category</b></label>
+                                    <div class="col-md">
+                                        <select class="form-control" id="expensecategory" name="expensecategory" required>
+                                            <?php
+                                            $categories_query = "SELECT * FROM expense_categories";
+                                            $categories_result = mysqli_query($con, $categories_query);
+
+                                            while ($row = mysqli_fetch_assoc($categories_result)) {
+                                                $category_name = $row['category_name'];
+                                                $selected = ($category_name === $expensecategory) ? 'selected' : '';
+                                                echo "<option value=\"$category_name\" $selected>$category_name</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </fieldset>
 
                             <div class="form-group row">
                                 <div class="col-md-12 text-right">
@@ -204,9 +223,6 @@ if (isset($_GET['delete'])) {
                             </div>
                         </form>
                     </div>
-
-                    <div class="col-md-3"></div>
-                    
                 </div>
             </div>
         </div>
@@ -231,6 +247,18 @@ if (isset($_GET['delete'])) {
     </script>
     <script>
 
+    </script>
+	  <!-- Script to hide the alert after 5 seconds -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+			setTimeout(function() {
+            document.querySelector('#error-alert').remove();
+            }, 5000);
+			setTimeout(function() {
+			document.querySelector('#success-alert').remove();
+            }, 5000);
+          
+        });
     </script>
 </body>
 </html>

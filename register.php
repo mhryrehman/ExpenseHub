@@ -1,6 +1,9 @@
 <?php
 require('config.php');
+session_start();
+
 if (isset($_REQUEST['firstname'])) {
+	$error_message = "";
   if ($_REQUEST['password'] == $_REQUEST['confirm_password']) {
     $firstname = stripslashes($_REQUEST['firstname']);
     $firstname = mysqli_real_escape_string($con, $firstname);
@@ -19,11 +22,13 @@ if (isset($_REQUEST['firstname'])) {
 
     $query = "INSERT into `users` (firstname, lastname, password, email) VALUES ('$firstname','$lastname', '" . md5($password) . "', '$email' )";
     $result = mysqli_query($con, $query);
-    if ($result) {
-      header("Location: login.php");
+   if ($result) {
+      $_SESSION['email'] = $email;
+      header("Location: index.php");
+      exit();
     }
   } else {
-    echo ("ERROR: Please Check Your Password & Confirmation password");
+    $error_message = "Password and Confirm Password did not match!";
   }
 }
 ?>
@@ -153,6 +158,11 @@ if (isset($_REQUEST['firstname'])) {
 <body>
   <div class="signup-form">
     <form action="" method="POST" autocomplete="off">
+	<?php if (!empty($error_message)): ?>
+       <div id="error-alert" class="alert alert-danger w-100">
+       <?php echo $error_message; ?>
+       </div>
+    <?php endif; ?>
       <h2>Register</h2>
       <div class="form-group">
         <div class="row">
@@ -188,6 +198,13 @@ if (isset($_REQUEST['firstname'])) {
     $("#wrapper").toggleClass("toggled");
   });
 </script>
+   <script type="text/javascript">
+        $(document).ready(function() {
+			setTimeout(function() {
+            document.querySelector('#error-alert').remove();
+            }, 5000);
+        });
+    </script>
 <script>
   feather.replace()
 </script>
