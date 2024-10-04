@@ -96,7 +96,7 @@ if (isset($_POST['email'])) {
        </div>
     <?php endif; ?>
 	
-      <h2 class="text-center">Personal Expense Tracker</h2>
+      <h2 class="text-center">Expense Hub</h2>
       <p class="hint-text">Login Panel</p>
       <div class="form-group">
         <input type="text" name="email" class="form-control" placeholder="Email" required="required">
