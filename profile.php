@@ -1,24 +1,21 @@
 <?php
 include("session.php");
 
-// Fetch the user data including profile image
 $user_query = mysqli_query($con, "SELECT * FROM users WHERE user_id = '$userid'");
 $user_data = mysqli_fetch_assoc($user_query);
-$profile_img = $user_data['img'] ? $user_data['img'] : 'default_profile.png'; // default image if no profile image exists
+$profile_img = $user_data['img'] ? $user_data['img'] : 'default_profile.png';
 $fname = $user_data['firstname']; 
-$lname = $user_data['lastname']; 
+$lname = $user_data['lastname'];
 if (isset($_POST['save'])) {
 	
-   $error_message = ""; // To store error messages
-    $success_message = ""; // To store success messages
+   $error_message = ""; 
+    $success_message = "";
     $fname = $_POST['first_name'];
     $lname = $_POST['last_name'];
 
-    // Update first name and last name
     $sql = "UPDATE users SET firstname = '$fname', lastname='$lname' WHERE user_id='$userid'";
     if (mysqli_query($con, $sql)) {
         $success_message = "Records were updated successfully.";
-    //header('location: profile.php');		
     } else {
         $error_message = "ERROR: Could not execute $sql. " . mysqli_error($con);
     }
@@ -32,7 +29,7 @@ if (isset($_POST['save'])) {
               $new_password = mysqli_real_escape_string($con, $_POST['new_password']);
               $confirm_password = mysqli_real_escape_string($con, $_POST['confirm_password']);
               if ($new_password == $confirm_password) {
-                  $new_password_hash = md5($new_password); // Replace md5 with password_hash() in production
+                  $new_password_hash = md5($new_password);
                   $sql = "UPDATE users SET password = '$new_password_hash' WHERE user_id='$userid'";
                   if (mysqli_query($con, $sql)) {
                       $success_message = "Password updated successfully.";
@@ -51,16 +48,10 @@ if (isset($_POST['but_upload'])) {
     $name = $_FILES['file']['name'];
     $target_dir = "uploads/";
     $target_file = $target_dir . basename($_FILES["file"]["name"]);
-
-    // Select file type
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
-    // Valid file extensions
     $extensions_arr = array("jpg", "jpeg", "png", "gif");
 
-    // Check extension
     if (in_array($imageFileType, $extensions_arr)) {
-        // Insert record and move the uploaded file
         $query = "UPDATE users SET img = '$name' WHERE user_id='$userid'";
         if (mysqli_query($con, $query)) {
             move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name);
@@ -118,7 +109,6 @@ if (isset($_POST['but_upload'])) {
                 <a href="index.php">
                     <img class="img img-fluid rounded-circle" src="uploads/<?php echo $profile_img; ?>" width="120">
                 </a>
-               <!--  <h5><?php echo $username ?></h5> -->
 				<h5><?php echo $fname . ' ' . $lname; ?></h5>
                 <p><?php echo $useremail ?></p>
             </div>

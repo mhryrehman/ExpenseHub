@@ -16,17 +16,24 @@ if (isset($_REQUEST['firstname'])) {
 
     $password = stripslashes($_REQUEST['password']);
     $password = mysqli_real_escape_string($con, $password);
-
-
-   
-
-    $query = "INSERT into `users` (firstname, lastname, password, email) VALUES ('$firstname','$lastname', '" . md5($password) . "', '$email' )";
-    $result = mysqli_query($con, $query);
-   if ($result) {
-      $_SESSION['email'] = $email;
-      header("Location: index.php");
-      exit();
-    }
+	
+	//check if user already exists
+	$selectquery = "SELECT * FROM `users` WHERE email='$email'";
+    $selectresult = mysqli_query($con, $selectquery) or die(mysqli_error($con));
+    $selectrows = mysqli_num_rows($selectresult);
+	
+	if($selectrows >= 1){
+		$error_message = "User already exists with given email.";
+	}else{
+		  $query = "INSERT into `users` (firstname, lastname, password, email) VALUES ('$firstname','$lastname', '" . md5($password) . "', '$email' )";
+          $result = mysqli_query($con, $query);
+        if ($result) {
+            $_SESSION['email'] = $email;
+			header("Location: index.php");
+			exit();
+		}
+	}
+  
   } else {
     $error_message = "Password and Confirm Password did not match!";
   }
