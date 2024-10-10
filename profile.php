@@ -5,7 +5,8 @@ include("session.php");
 $user_query = mysqli_query($con, "SELECT * FROM users WHERE user_id = '$userid'");
 $user_data = mysqli_fetch_assoc($user_query);
 $profile_img = $user_data['img'] ? $user_data['img'] : 'default_profile.png'; // default image if no profile image exists
-
+$fname = $user_data['firstname']; 
+$lname = $user_data['lastname']; 
 if (isset($_POST['save'])) {
 	
    $error_message = ""; // To store error messages
@@ -17,6 +18,7 @@ if (isset($_POST['save'])) {
     $sql = "UPDATE users SET firstname = '$fname', lastname='$lname' WHERE user_id='$userid'";
     if (mysqli_query($con, $sql)) {
         $success_message = "Records were updated successfully.";
+    //header('location: profile.php');		
     } else {
         $error_message = "ERROR: Could not execute $sql. " . mysqli_error($con);
     }
@@ -116,7 +118,8 @@ if (isset($_POST['but_upload'])) {
                 <a href="index.php">
                     <img class="img img-fluid rounded-circle" src="uploads/<?php echo $profile_img; ?>" width="120">
                 </a>
-                <h5><?php echo $username ?></h5>
+               <!--  <h5><?php echo $username ?></h5> -->
+				<h5><?php echo $fname . ' ' . $lname; ?></h5>
                 <p><?php echo $useremail ?></p>
             </div>
             <div class="sidebar-heading">Management</div>
@@ -182,7 +185,7 @@ if (isset($_POST['but_upload'])) {
                                     <div class="form-group">
                                         <div class="col-md">
                                             <label for="first_name">First name</label>
-                                            <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First Name" value="<?php echo $user_data['firstname']; ?>">
+                                            <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First Name" value="<?php echo $fname; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -190,7 +193,7 @@ if (isset($_POST['but_upload'])) {
                                     <div class="form-group">
                                         <div class="col-md">
                                             <label for="last_name">Last name</label>
-                                            <input type="text" class="form-control" name="last_name" id="last_name" value="<?php echo $user_data['lastname']; ?>" placeholder="Last Name">
+                                            <input type="text" class="form-control" name="last_name" id="last_name" value="<?php echo $lname; ?>" placeholder="Last Name">
                                         </div>
                                     </div>
                                 </div>
