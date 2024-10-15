@@ -10,11 +10,11 @@ if (isset($_POST['save'])) {
 	
    $error_message = ""; 
     $success_message = "";
-    $fname = $_POST['first_name'];
-    $lname = $_POST['last_name'];
 
     $sql = "UPDATE users SET firstname = '$fname', lastname='$lname' WHERE user_id='$userid'";
     if (mysqli_query($con, $sql)) {
+		$fname = $_POST['first_name'];
+		$lname = $_POST['last_name'];
         $success_message = "Records were updated successfully.";
     } else {
         $error_message = "ERROR: Could not execute $sql. " . mysqli_error($con);
