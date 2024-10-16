@@ -113,7 +113,7 @@ $exp_fetched = mysqli_query($con, "SELECT * FROM expenses WHERE user_id = '$user
                         <table class="table table-hover table-bordered">
                             <thead>
                                 <tr class="text-center">
-                                    <th>Sl No.</th>
+                                    <th>Sr No.</th>
                                     <th>Date</th>
                                     <th>Amount</th>
                                     <th>Expense Category</th>

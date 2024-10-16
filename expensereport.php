@@ -176,7 +176,7 @@ $profile_img = mysqli_fetch_assoc($profile_img_query)['img'];
         echo '<h4 class="mt-4">Generated Report</h4>';
         echo '<table class="table table-hover table-bordered">';
         echo '<thead><tr class="text-center">';
-        echo '<th>Sl No.</th>';
+        echo '<th>Sr No.</th>';
         echo '<th>' . $tableHeader . '</th>';
         echo '<th>Total Amount</th></tr></thead>';
         echo '<tbody>';
